@@ -778,3 +778,12 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/sl102/D
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:291)
 	... 59 more
+2026-09-16 09:12:10.434769-03:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM TB_USUARIO TB_USUARIO [*]TB_VEICULO TB_VEICULO TB_VEICULO"; SQL statement:
+SELECT * FROM TB_USUARIO TB_USUARIO TB_VEICULO TB_VEICULO TB_VEICULO [42000-240]
+2026-09-16 09:12:10.700859-03:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM TB_USUARIO TB_USUARIO [*]TB_VEICULO TB_VEICULO TB_VEICULO"; SQL statement:
+SELECT * FROM TB_USUARIO TB_USUARIO TB_VEICULO TB_VEICULO TB_VEICULO [42000-240]
+2026-09-16 09:35:25.607384-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]TB_VEICULO"; expected "TRUNCATE"; SQL statement:
+TB_VEICULO [42001-240]
