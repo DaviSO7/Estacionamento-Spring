@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/layout :: head('Remover veículo', '/css/system.css')}"
+  ></head>
+  <body id="top" class="system-page removal-page">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header th:replace="~{fragments/layout :: appHeader}"></header>
+    <main class="system-main wrap" id="conteudo">
+      <div class="system-topline">
+        <p>
+          Operação
+          <span aria-hidden="true">/</span>
+          Remover veículo
+        </p>
+        <span>Estacionamento escolar</span>
+      </div>
+      <a class="back-link" href="/painel">← Voltar aos registros</a>
+      <div class="system-heading">
+        <div>
+          <p class="eyebrow">Conferência do registro</p>
+          <h1>Remover este veículo?</h1>
+          <p>Confira a placa e os detalhes antes de confirmar.</p>
+        </div>
+      </div>
+      <section class="removal-card" aria-labelledby="vehicle-title">
+        <div class="removal-card-heading">
+          <div>
+            <p class="eyebrow">Placa do veículo</p>
+            <h2 id="vehicle-title" th:text="${veiculo.placa}"></h2>
+          </div>
+          <span class="removal-badge">Remoção permanente</span>
+        </div>
+        <dl class="removal-details">
+          <div>
+            <dt>Modelo</dt>
+            <dd th:text="${veiculo.modelo}"></dd>
+          </div>
+          <div>
+            <dt>Cor</dt>
+            <dd th:text="${veiculo.cor}"></dd>
+          </div>
+          <div>
+            <dt>Entrada registrada</dt>
+            <dd
+              th:text="${veiculo.horaEntrada != null ? #temporals.format(veiculo.horaEntrada, 'dd/MM/yyyy HH:mm') : 'Não informada'}"
+            ></dd>
+          </div>
+          <div class="removal-note">
+            <dt>Observações</dt>
+            <dd
+              th:text="${#strings.isEmpty(veiculo.observacao) ? 'Sem observações' : veiculo.observacao}"
+            ></dd>
+          </div>
+        </dl>
+        <div class="removal-warning">
+          <strong>O registro será excluído da lista geral.</strong>
+          <p>
+            Placa, modelo, cor, observações e horário de entrada deste registro
+            serão removidos. Depois da remoção, não será possível recuperar o
+            registro. Isso não registra uma saída do estacionamento.
+          </p>
+        </div>
+        <form
+          method="post"
+          th:action="@{/veiculo/{id}/remover(id=${veiculo.id})}"
+          data-delete-form
+        >
+          <input
+            type="hidden"
+            name="_remocaoToken"
+            th:value="${tokenRemocao}"
+          />
+          <p class="removal-hint" data-delete-hint hidden>
+            Ao confirmar, você terá 5 segundos para cancelar antes do envio.
+          </p>
+          <div class="removal-actions">
+            <a class="button button-secondary" href="/painel">Manter veículo</a>
+            <button
+              class="delete-button"
+              type="submit"
+              data-delete-button
+              aria-describedby="removal-status"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              >
+                <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7m4-7v7" />
+              </svg>
+              <span data-delete-label>Confirmar remoção</span>
+              <span
+                class="delete-count"
+                data-delete-count
+                aria-hidden="true"
+                hidden
+              ></span>
+            </button>
+          </div>
+          <p
+            id="removal-status"
+            class="removal-status"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            data-delete-status
+          >
+            Nenhuma alteração foi feita.
+          </p>
+          <noscript>
+            <p class="removal-hint">
+              Ao clicar em Confirmar remoção, a solicitação será enviada
+              imediatamente.
+            </p>
+          </noscript>
+        </form>
+      </section>
+      <footer class="system-footer">
+        <span>Estacionamento escolar</span>
+        <span>Conferir antes de remover</span>
+      </footer>
+    </main>
+    <script type="module" src="/js/remover-veiculo.js"></script>
+  </body>
+</html>

@@ -1,296 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Estacionamento - Painel</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #050507;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                linear-gradient(rgba(150, 100, 255, 0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(150, 100, 255, 0.035) 1px, transparent 1px);
-            background-size: 55px 55px;
-            pointer-events: none;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            width: 700px;
-            height: 700px;
-            top: -300px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: radial-gradient(
-                circle,
-                rgba(125, 80, 255, 0.18) 0%,
-                rgba(100, 60, 220, 0.07) 35%,
-                transparent 70%
-            );
-            pointer-events: none;
-        }
-
-        .area {
-            width: 100%;
-            max-width: 700px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .botoes {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            border-radius: 9px;
-            background: linear-gradient(
-                135deg,
-                #6546a9,
-                #8a61d1
-            );
-            border: 1px solid rgba(177, 140, 255, 0.3);
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(
-                135deg,
-                #7351bb,
-                #956be0
-            );
-            box-shadow:
-                0 10px 30px rgba(120, 75, 220, 0.25),
-                0 0 20px rgba(140, 90, 240, 0.12);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .container {
-            background: rgba(12, 12, 17, 0.95);
-            backdrop-filter: blur(15px);
-            padding: 55px 60px;
-            border-radius: 18px;
-            width: 100%;
-            position: relative;
-            text-align: center;
-            border: 1px solid rgba(155, 110, 255, 0.22);
-            box-shadow:
-                0 25px 70px rgba(0, 0, 0, 0.65),
-                0 0 50px rgba(120, 70, 255, 0.08);
-            animation: slideUp 0.6s ease-out;
-            transition: 0.3s ease;
-        }
-
-        .container:hover {
-            border-color: rgba(155, 110, 255, 0.4);
-            box-shadow:
-                0 30px 80px rgba(0, 0, 0, 0.75),
-                0 0 60px rgba(120, 70, 255, 0.13);
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 2px;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                #9a6cff,
-                transparent
-            );
-            box-shadow: 0 0 20px rgba(154, 108, 255, 0.8);
-        }
-
-        .icon {
-            width: 75px;
-            height: 75px;
-            margin: 0 auto 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 18px;
-            background: rgba(130, 85, 230, 0.08);
-            border: 1px solid rgba(155, 110, 255, 0.22);
-            font-size: 38px;
-            box-shadow:
-                0 0 30px rgba(120, 70, 255, 0.08);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        h1 {
-            color: #f5f3ff;
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 18px;
-            letter-spacing: 0.5px;
-        }
-
-        h1::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            margin: 12px auto 0;
-            border-radius: 5px;
-            background: linear-gradient(
-                90deg,
-                #7650d9,
-                #b18cff
-            );
-            box-shadow: 0 0 15px rgba(150, 100, 255, 0.5);
-        }
-
-        h2 {
-            color: #85818f;
-            font-size: 17px;
-            font-weight: 400;
-            margin-top: 25px;
-            line-height: 1.6;
-            animation: pulse 2.5s ease-in-out infinite;
-        }
-
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            margin-top: 28px;
-            padding: 9px 16px;
-            border-radius: 20px;
-            background: rgba(110, 220, 150, 0.05);
-            border: 1px solid rgba(110, 220, 150, 0.15);
-            color: #8fcca8;
-            font-size: 13px;
-        }
-
-        .status::before {
-            content: '';
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #70d69a;
-            box-shadow: 0 0 10px rgba(112, 214, 154, 0.7);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.97);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 38px 22px;
-            }
-
-            .icon {
-                width: 60px;
-                height: 60px;
-                font-size: 30px;
-            }
-
-            h1 {
-                font-size: 25px;
-            }
-
-            h2 {
-                font-size: 15px;
-            }
-
-            .botoes {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="area">
-
-    <div class="container">
-
-        <h1>Painel Estacionamento</h1>
-
-        <div class="botoes">
-            <a href="veiculo/registrar-entrada" class="btn">Registrar Entrada</a>
-            <a href="veiculo/registrar-saida" class="btn">Registrar Saída</a>
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/layout :: head('Registros', '/css/system.css')}"
+  ></head>
+  <body id="top" class="system-page records-page" data-current-page="registros">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header th:replace="~{fragments/layout :: appHeader}"></header>
+    <main class="system-main wrap" id="conteudo">
+      <div class="system-topline">
+        <p>
+          Operação
+          <span aria-hidden="true">/</span>
+          Registros
+        </p>
+        <span>Estacionamento escolar</span>
+      </div>
+      <div class="system-heading">
+        <div>
+          <p class="eyebrow">01 / Registros</p>
+          <h1>
+            <span class="desktop-title">Cada chegada, registrada.</span>
+            <span class="mobile-title">Registros do estacionamento.</span>
+          </h1>
+          <p>Consulte os veículos e registre uma nova entrada.</p>
         </div>
-
-        <h2>Implementações virão!!!!</h2>
-
-        <div class="status">Sistema em desenvolvimento</div>
-    </div>
-
-</div>
-
-</body>
+        <a class="button" href="/veiculo/registrar-entrada">
+          Registrar entrada
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <p
+        class="notice notice-success"
+        role="status"
+        th:if="${sucesso}"
+        th:text="${sucesso}"
+      ></p>
+      <p
+        class="notice notice-error"
+        role="alert"
+        th:if="${erroRemocao}"
+        th:text="${erroRemocao}"
+      ></p>
+      <section class="records" aria-labelledby="records-title">
+        <div class="records-header">
+          <h2 id="records-title">Todos os veículos</h2>
+          <span
+            class="count"
+            th:text="${#lists.size(veiculos) + (#lists.size(veiculos) == 1 ? ' registro' : ' registros')}"
+          >
+            0 registros
+          </span>
+        </div>
+        <div class="empty-state" th:if="${#lists.isEmpty(veiculos)}">
+          <span class="empty-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                d="m5 7 1.5-4h11L19 7M4 16V8a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8M4 16h16M6 16v4m12-4v4M7 11h2m6 0h2"
+              />
+            </svg>
+          </span>
+          <h3>Nenhuma entrada registrada.</h3>
+          <p>Registre a primeira entrada para consultar os veículos aqui.</p>
+          <a class="button" href="/veiculo/registrar-entrada">
+            Registrar entrada
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="table-scroll" th:unless="${#lists.isEmpty(veiculos)}">
+          <table class="records-table" role="table">
+            <caption class="sr-only">
+              Todos os veículos cadastrados no estacionamento
+            </caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th scope="col" role="columnheader">Placa</th>
+                <th scope="col" role="columnheader">Modelo</th>
+                <th scope="col" role="columnheader">Cor</th>
+                <th scope="col" role="columnheader">Entrada</th>
+                <th scope="col" role="columnheader">Observações</th>
+                <th scope="col" role="columnheader">Ações</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              <tr th:each="veiculo : ${veiculos}" role="row">
+                <th
+                  class="record-plate"
+                  scope="row"
+                  role="rowheader"
+                  th:text="${veiculo.placa}"
+                ></th>
+                <td
+                  class="record-model"
+                  role="cell"
+                  th:text="${veiculo.modelo}"
+                ></td>
+                <td
+                  class="record-color"
+                  role="cell"
+                  th:text="${veiculo.cor}"
+                ></td>
+                <td class="record-time" role="cell">
+                  <span class="mobile-cell-label" aria-hidden="true">
+                    Entrada
+                  </span>
+                  <span
+                    th:text="${veiculo.horaEntrada != null ? #temporals.format(veiculo.horaEntrada, 'dd/MM/yyyy HH:mm') : '—'}"
+                  ></span>
+                </td>
+                <td class="record-note" role="cell">
+                  <span class="mobile-cell-label" aria-hidden="true">
+                    Observações:
+                  </span>
+                  <span
+                    th:text="${#strings.isEmpty(veiculo.observacao) ? 'Sem observações' : veiculo.observacao}"
+                  ></span>
+                </td>
+                <td class="record-actions" role="cell">
+                  <a
+                    class="remove-link"
+                    th:href="@{/veiculo/{id}/remover(id=${veiculo.id})}"
+                    th:aria-label="${'Remover veículo de placa ' + veiculo.placa}"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    >
+                      <path
+                        d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7m4-7v7"
+                      />
+                    </svg>
+                    Remover
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <p class="system-footnote">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path d="M12 3 3 7v5c0 4 4 7 9 9 5-2 9-5 9-9V7l-9-4Z" />
+          <path d="M12 8v5m0 3v1" />
+        </svg>
+        Remover exclui o registro definitivamente. Essa ação não registra o
+        horário de saída.
+      </p>
+      <footer class="system-footer">
+        <span>Estacionamento escolar</span>
+        <span>Registro de entrada e consulta</span>
+      </footer>
+    </main>
+  </body>
 </html>

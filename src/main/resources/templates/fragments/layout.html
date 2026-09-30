@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="head(title, stylesheet)">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#13161d" />
+    <title th:text="${title} + ' · Estacionamento'">Estacionamento</title>
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" th:href="${stylesheet}" />
+    <link rel="stylesheet" href="/css/pixel-effects.css" />
+    <link
+      rel="stylesheet"
+      th:if="${stylesheet == '/css/landing.css'}"
+      href="/css/hero-devices.css"
+    />
+    <script type="module" src="/js/ui.js"></script>
+  </head>
+  <body>
+    <a
+      th:fragment="brand"
+      class="brand"
+      href="/"
+      aria-label="Estacionamento — início"
+    >
+      <span>Estacionamento</span>
+      <span class="brand-school">ESCOLAR</span>
+    </a>
+    <header th:fragment="appHeader" class="app-header">
+      <a th:replace="~{fragments/layout :: brand}"></a>
+      <p class="app-navigation-label">Operação</p>
+      <nav class="app-navigation" aria-label="Navegação do sistema">
+        <a href="/painel" data-app-nav>
+          <span aria-hidden="true">▤</span>
+          Registros
+        </a>
+        <a href="/veiculo/registrar-entrada" data-app-nav>
+          <span aria-hidden="true">↗</span>
+          Registrar entrada
+        </a>
+      </nav>
+      <div class="app-header-bottom">
+        <p>
+          Operação geral
+          <span>Todos os veículos</span>
+        </p>
+        <form method="post" action="/sair">
+          <button class="text-link" type="submit">
+            Sair da conta
+            <span aria-hidden="true">↗</span>
+          </button>
+        </form>
+      </div>
+    </header>
+    <footer th:fragment="footer" class="footer wrap">
+      <a th:replace="~{fragments/layout :: brand}"></a>
+      <span>Menos complicação. Mais movimento.</span>
+      <a href="#top">Voltar ao topo ↑</a>
+    </footer>
+  </body>
+</html>

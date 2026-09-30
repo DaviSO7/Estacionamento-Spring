@@ -1,282 +1,140 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Estacionamento - Registrar Entrada</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #050507;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                linear-gradient(rgba(150, 100, 255, 0.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(150, 100, 255, 0.035) 1px, transparent 1px);
-            background-size: 55px 55px;
-            pointer-events: none;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            width: 700px;
-            height: 700px;
-            top: -300px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: radial-gradient(
-                circle,
-                rgba(125, 80, 255, 0.18) 0%,
-                rgba(100, 60, 220, 0.07) 35%,
-                transparent 70%
-            );
-            pointer-events: none;
-        }
-
-        .container {
-            background: rgba(12, 12, 17, 0.95);
-            backdrop-filter: blur(15px);
-            padding: 45px 50px;
-            border-radius: 18px;
-            max-width: 500px;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-            border: 1px solid rgba(155, 110, 255, 0.22);
-            box-shadow:
-                0 25px 70px rgba(0, 0, 0, 0.65),
-                0 0 50px rgba(120, 70, 255, 0.08);
-            animation: slideUp 0.6s ease-out;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 2px;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                #9a6cff,
-                transparent
-            );
-            box-shadow: 0 0 20px rgba(154, 108, 255, 0.8);
-        }
-
-        h1 {
-            color: #f5f3ff;
-            font-size: 28px;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        h1::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            margin: 12px auto 0;
-            border-radius: 5px;
-            background: linear-gradient(
-                90deg,
-                #7650d9,
-                #b18cff
-            );
-            box-shadow: 0 0 15px rgba(150, 100, 255, 0.5);
-        }
-
-        label {
-            display: block;
-            color: #b9b5c5;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: 13px 14px;
-            margin-bottom: 20px;
-            border: 1px solid #292732;
-            border-radius: 9px;
-            background: #101016;
-            color: #f5f3ff;
-            font-family: inherit;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s ease;
-        }
-
-        input:focus,
-        textarea:focus {
-            border-color: #8a61d1;
-            box-shadow: 0 0 0 3px rgba(130, 85, 230, 0.12);
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: #666371;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 90px;
-        }
-
-        .botoes {
-            display: flex;
-            gap: 12px;
-            margin-top: 5px;
-        }
-
-        button,
-        .voltar {
-            flex: 1;
-            padding: 13px;
-            border-radius: 9px;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s ease;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        button {
-            border: 1px solid rgba(177, 140, 255, 0.3);
-            background: linear-gradient(
-                135deg,
-                #6546a9,
-                #8a61d1
-            );
-            color: white;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(
-                135deg,
-                #7351bb,
-                #956be0
-            );
-            box-shadow:
-                0 10px 30px rgba(120, 75, 220, 0.25),
-                0 0 20px rgba(140, 90, 240, 0.12);
-        }
-
-        .voltar {
-            border: 1px solid #292732;
-            background: #101016;
-            color: #aaa6b5;
-        }
-
-        .voltar:hover {
-            transform: translateY(-2px);
-            border-color: #6f55a5;
-            color: #d8d2e5;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.97);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 35px 22px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .botoes {
-                flex-direction: column;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <h1>Registrar Entrada</h1>
-
-    <form method="post" action="/veiculo/cadastrar">
-
-        <label for="placa">Placa</label>
-        <input
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/layout :: head('Registrar entrada', '/css/system.css')}"
+  ></head>
+  <body id="top" class="system-page entry-page" data-current-page="entrada">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header th:replace="~{fragments/layout :: appHeader}"></header>
+    <main class="system-main wrap" id="conteudo">
+      <div class="system-topline">
+        <p>
+          Operação
+          <span aria-hidden="true">/</span>
+          Registrar entrada
+        </p>
+        <span>Estacionamento escolar</span>
+      </div>
+      <a class="back-link" href="/painel">← Voltar aos registros</a>
+      <div class="system-heading">
+        <div>
+          <p class="eyebrow">02 / Nova entrada</p>
+          <h1>Registrar entrada.</h1>
+          <p>Identifique o veículo. O horário será registrado ao salvar.</p>
+        </div>
+      </div>
+      <div class="register-layout">
+        <div class="form-panel">
+          <p
+            class="notice notice-error"
+            role="alert"
+            th:if="${erroEntrada}"
+            th:text="${erroEntrada}"
+          ></p>
+          <form
+            method="post"
+            action="/veiculo/cadastrar"
+            data-submit
+            data-pending-label="Registrando…"
+          >
+            <div class="field">
+              <label for="placa">Placa do veículo</label>
+              <input
                 type="text"
                 id="placa"
                 name="placa"
-                placeholder="Ex: ABC1D23"
+                class="plate-input"
+                placeholder="Ex.: ABC1D23"
                 required
-        >
-
-        <label for="modelo">Modelo</label>
-        <input
-                type="text"
-                id="modelo"
-                name="modelo"
-                placeholder="Ex: Honda Civic"
-                required
-        >
-
-        <label for="cor">Cor</label>
-        <input
-                type="text"
-                id="cor"
-                name="cor"
-                placeholder="Ex: Preto"
-                required
-        >
-
-        <label for="observacao">Observação</label>
-        <textarea
+                maxlength="10"
+                autocomplete="off"
+                autocapitalize="characters"
+                spellcheck="false"
+                aria-describedby="plate-help"
+                data-required-message="Informe a placa para registrar a entrada."
+                th:value="${veiculo != null ? veiculo.placa : ''}"
+              />
+              <p class="field-help" id="plate-help">
+                Confira os caracteres antes de salvar.
+              </p>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="modelo">Modelo</label>
+                <input
+                  type="text"
+                  id="modelo"
+                  name="modelo"
+                  placeholder="Ex.: Honda Civic"
+                  required
+                  maxlength="100"
+                  aria-describedby="model-help"
+                  th:value="${veiculo != null ? veiculo.modelo : ''}"
+                />
+                <p class="field-help" id="model-help">Ex.: marca e modelo.</p>
+              </div>
+              <div class="field">
+                <label for="cor">Cor</label>
+                <input
+                  type="text"
+                  id="cor"
+                  name="cor"
+                  placeholder="Ex.: Prata"
+                  required
+                  maxlength="40"
+                  aria-describedby="color-help"
+                  th:value="${veiculo != null ? veiculo.cor : ''}"
+                />
+                <p class="field-help" id="color-help">Cor predominante.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="observacao">
+                Observações
+                <span class="muted">(opcional)</span>
+              </label>
+              <textarea
                 id="observacao"
                 name="observacao"
-                placeholder="Digite alguma observação..."
-        ></textarea>
-
-        <div class="botoes">
-            <a href="/painel" class="voltar">Voltar</a>
-            <button type="submit">Registrar Entrada</button>
+                placeholder="Adicione um detalhe sobre a entrada."
+                maxlength="255"
+                aria-describedby="note-help"
+                th:text="${veiculo != null ? veiculo.observacao : ''}"
+              ></textarea>
+              <p class="field-help" id="note-help">
+                Até 255 caracteres. Evite informações pessoais.
+              </p>
+            </div>
+            <div class="form-actions">
+              <button class="button" type="submit">
+                Registrar entrada
+                <span aria-hidden="true">↗</span>
+              </button>
+              <a class="text-link cancel-link" href="/painel">Cancelar</a>
+            </div>
+          </form>
         </div>
-
-    </form>
-
-</div>
-
-</body>
+        <aside class="register-note" aria-labelledby="register-note-title">
+          <span class="large-index" aria-hidden="true">01</span>
+          <h2 id="register-note-title">
+            Uma chegada.
+            <br />
+            Um registro.
+          </h2>
+          <dl>
+            <dt>Identifique</dt>
+            <dd>Placa, modelo e cor ajudam a reconhecer o veículo.</dd>
+            <dt>Confira</dt>
+            <dd>Revise os dados antes de registrar a entrada.</dd>
+            <dt>Consulte</dt>
+            <dd>Após salvar, o registro aparece no painel geral.</dd>
+          </dl>
+        </aside>
+      </div>
+      <footer class="system-footer">
+        <span>Estacionamento escolar</span>
+        <span>Registro de entrada e consulta</span>
+      </footer>
+    </main>
+  </body>
 </html>
