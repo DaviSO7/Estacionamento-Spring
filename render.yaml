@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: estacionamento-spring
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /login
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
