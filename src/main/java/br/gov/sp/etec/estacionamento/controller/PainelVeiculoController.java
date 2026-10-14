@@ -24,7 +24,8 @@ import java.util.UUID;
 public class PainelVeiculoController {
     private static final String TOKEN_REMOCAO = "tokenRemocaoVeiculo";
     private static final Logger LOG = LoggerFactory.getLogger(PainelVeiculoController.class);
-
+    // Na próxima feature no painel vai ter o atributo de status, onde será de estacionado ou nao estacionado (além da função já existente de remover de vez o veículo), possibilitando registrar a saída do veículo do estacionamento (e a volta), com o tempo de permanencia de tal
+    // É preciso arrumar também a hora, que aponta no painel 3 horas depois do registro
     @Autowired
     VeiculoService service;
 
