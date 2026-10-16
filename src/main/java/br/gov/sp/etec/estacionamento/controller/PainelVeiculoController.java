@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.UUID;
+import java.time.LocalDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 @RequestMapping("veiculo")
@@ -47,6 +49,49 @@ public class PainelVeiculoController {
     @GetMapping("registrar-entrada")
     public String registrarEntrada() {
         return "registrar-entrada";
+    }
+
+    @PostMapping("{id}/saida")
+    public String registrarSaida(@PathVariable Long id,
+            @RequestParam(name = "_movimentacaoToken", required = false) String token,
+            @RequestParam(name = "entradaEsperada", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime entradaEsperada,
+            HttpSession session, RedirectAttributes redirect) {
+        return movimentar(id, token, entradaEsperada, session, redirect, true);
+    }
+
+    @PostMapping("{id}/retorno")
+    public String registrarRetorno(@PathVariable Long id,
+            @RequestParam(name = "_movimentacaoToken", required = false) String token,
+            @RequestParam(name = "entradaEsperada", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime entradaEsperada,
+            HttpSession session, RedirectAttributes redirect) {
+        return movimentar(id, token, entradaEsperada, session, redirect, false);
+    }
+
+    private String movimentar(Long id, String token, LocalDateTime entradaEsperada,
+            HttpSession session, RedirectAttributes redirect, boolean saida) {
+        var esperado = (String) session.getAttribute("tokenMovimentacaoVeiculo");
+        if (esperado == null || token == null || !MessageDigest.isEqual(
+                esperado.getBytes(StandardCharsets.UTF_8), token.getBytes(StandardCharsets.UTF_8))) {
+            redirect.addFlashAttribute("erroMovimentacao", "Não foi possível confirmar a solicitação. Atualize o painel e tente novamente.");
+            return "redirect:/painel";
+        }
+        try {
+            boolean alterado = saida ? service.registrarSaida(id, entradaEsperada)
+                    : service.registrarRetorno(id, entradaEsperada);
+            if (alterado) {
+                redirect.addFlashAttribute("sucesso", saida
+                        ? "Saída registrada. O veículo permanece na lista para consulta e retorno."
+                        : "Retorno registrado. Uma nova permanência foi iniciada.");
+            } else {
+                redirect.addFlashAttribute("erroMovimentacao", "Registro alterado, removido ou com horário inconsistente. Atualize o painel antes de tentar novamente.");
+            }
+        } catch (DataAccessException e) {
+            LOG.warn("Falha ao movimentar registro de veículo {}", id, e);
+            redirect.addFlashAttribute("erroMovimentacao", "Não foi possível registrar a movimentação agora. Tente novamente em instantes.");
+        }
+        return "redirect:/painel";
     }
 
     @GetMapping("{id}/remover")

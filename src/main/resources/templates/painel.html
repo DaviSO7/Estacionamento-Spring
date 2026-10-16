@@ -22,7 +22,7 @@
             <span class="desktop-title">Cada chegada, registrada.</span>
             <span class="mobile-title">Registros do estacionamento.</span>
           </h1>
-          <p>Consulte os veículos e registre uma nova entrada.</p>
+          <p>Consulte os veículos e registre entradas, saídas e retornos.</p>
         </div>
         <a class="button" href="/veiculo/registrar-entrada">
           Registrar entrada
@@ -40,6 +40,12 @@
         role="alert"
         th:if="${erroRemocao}"
         th:text="${erroRemocao}"
+      ></p>
+      <p
+        class="notice notice-error"
+        role="alert"
+        th:if="${erroMovimentacao}"
+        th:text="${erroMovimentacao}"
       ></p>
       <section class="records" aria-labelledby="records-title">
         <div class="records-header">
@@ -81,7 +87,9 @@
                 <th scope="col" role="columnheader">Placa</th>
                 <th scope="col" role="columnheader">Modelo</th>
                 <th scope="col" role="columnheader">Cor</th>
-                <th scope="col" role="columnheader">Entrada</th>
+                <th scope="col" role="columnheader">Horários</th>
+                <th scope="col" role="columnheader">Status</th>
+                <th scope="col" role="columnheader">Permanência</th>
                 <th scope="col" role="columnheader">Observações</th>
                 <th scope="col" role="columnheader">Ações</th>
               </tr>
@@ -111,6 +119,29 @@
                   <span
                     th:text="${veiculo.horaEntrada != null ? #temporals.format(veiculo.horaEntrada, 'dd/MM/yyyy HH:mm') : '—'}"
                   ></span>
+                  <small class="record-exit" th:unless="${veiculo.horarioBrasilia}">
+                    Entrada antiga: fuso não informado
+                  </small>
+                  <span
+                    class="record-exit"
+                    th:if="${veiculo.horaSaida != null}"
+                    th:text="${'Saída: ' + #temporals.format(veiculo.horaSaida, 'dd/MM/yyyy HH:mm')}"
+                  ></span>
+                </td>
+                <td class="record-status" role="cell">
+                  <span class="mobile-cell-label" aria-hidden="true">Status</span>
+                  <span
+                    class="parking-status"
+                    th:classappend="${veiculo.estacionado ? 'is-parked' : 'is-away'}"
+                    th:text="${veiculo.estacionado ? 'Estacionado' : 'Não estacionado'}"
+                  ></span>
+                </td>
+                <td class="record-duration" role="cell">
+                  <span class="mobile-cell-label" aria-hidden="true">Permanência</span>
+                  <span th:text="${veiculo.tempoPermanencia}"></span>
+                  <small
+                    th:text="${veiculo.estacionado ? 'Até esta atualização' : 'Última visita'}"
+                  ></small>
                 </td>
                 <td class="record-note" role="cell">
                   <span class="mobile-cell-label" aria-hidden="true">
@@ -121,6 +152,28 @@
                   ></span>
                 </td>
                 <td class="record-actions" role="cell">
+                  <form
+                    method="post"
+                    data-submit
+                    th:action="@{/veiculo/{id}/{acao}(id=${veiculo.id},acao=${veiculo.estacionado ? 'saida' : 'retorno'})}"
+                  >
+                    <input
+                      type="hidden"
+                      name="_movimentacaoToken"
+                      th:value="${tokenMovimentacao}"
+                    />
+                    <input
+                      type="hidden"
+                      name="entradaEsperada"
+                      th:value="${veiculo.horaEntrada}"
+                    />
+                    <button
+                      type="submit"
+                      class="movement-button"
+                      th:aria-label="${(veiculo.estacionado ? 'Registrar saída de ' : 'Registrar retorno de ') + veiculo.placa}"
+                      th:text="${veiculo.estacionado ? 'Registrar saída' : 'Registrar retorno'}"
+                    ></button>
+                  </form>
                   <a
                     class="remove-link"
                     th:href="@{/veiculo/{id}/remover(id=${veiculo.id})}"
@@ -156,12 +209,13 @@
           <path d="M12 3 3 7v5c0 4 4 7 9 9 5-2 9-5 9-9V7l-9-4Z" />
           <path d="M12 8v5m0 3v1" />
         </svg>
-        Remover exclui o registro definitivamente. Essa ação não registra o
-        horário de saída.
+        Novos horários em Brasília (America/Sao_Paulo); entradas antigas têm fuso não informado.
+        Atualize o painel para recalcular a permanência.
+        O retorno inicia uma nova visita. Remover exclui o registro definitivamente.
       </p>
       <footer class="system-footer">
         <span>Estacionamento escolar</span>
-        <span>Registro de entrada e consulta</span>
+        <span>Entradas, saídas e retornos</span>
       </footer>
     </main>
   </body>
