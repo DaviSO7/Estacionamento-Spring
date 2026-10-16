@@ -252,6 +252,22 @@ async function main() {
     assert.equal(await page.evaluate(() => Boolean(window.qaInjection)), false);
     assert.equal(await page.locator(".empty-state").count(), 0);
     await captureLayouts(page, "painel-sucesso");
+    assert.equal(await row.locator(".parking-status").innerText(), "Estacionado");
+    assert.match(await row.locator(".record-duration").innerText(), /0 h 0 min/);
+    const entradaInicial = await row.locator('[name="entradaEsperada"]').inputValue();
+    await row.getByRole("button", { name: /Registrar saída de/ }).click();
+    assert.match(await page.getByRole("status").innerText(), /Saída registrada/);
+    assert.equal(await row.locator(".parking-status").innerText(), "Não estacionado");
+    assert.equal(await row.locator('[name="entradaEsperada"]').inputValue(), entradaInicial);
+    assert.match(await row.locator(".record-exit").innerText(), /Saída:/);
+    assert.equal(await page.locator(".records-table tbody tr").count(), 1);
+    await captureLayouts(page, "painel-saida");
+    await row.getByRole("button", { name: /Registrar retorno de/ }).click();
+    assert.match(await page.getByRole("status").innerText(), /Retorno registrado/);
+    assert.equal(await row.locator(".parking-status").innerText(), "Estacionado");
+    assert.notEqual(await row.locator('[name="entradaEsperada"]').inputValue(), entradaInicial);
+    assert.equal(await page.locator(".records-table tbody tr").count(), 1);
+    await captureLayouts(page, "painel-retorno");
     const removalLink = row.getByRole("link", { name: /Remover veículo/ });
     const removalPath = await removalLink.getAttribute("href");
     const beforeRemoval = posts.length;
@@ -348,6 +364,11 @@ async function main() {
       viewport: { width: 390, height: 844 },
     });
     const nativePage = await nativeContext.newPage();
+    await nativePage.goto(baseURL + "/painel");
+    await nativePage.getByRole("button", { name: /Registrar saída de/ }).click();
+    assert.equal(await nativePage.locator(".parking-status").innerText(), "Não estacionado");
+    await nativePage.getByRole("button", { name: /Registrar retorno de/ }).click();
+    assert.equal(await nativePage.locator(".parking-status").innerText(), "Estacionado");
     await nativePage.goto(baseURL + noScriptRemovalPath);
     assert.equal(
       await nativePage.locator("[data-delete-hint]").isVisible(),
@@ -394,7 +415,7 @@ async function main() {
       JSON.stringify({ passed: true, posts, screenshots: output }, null, 2),
     );
     console.log(
-      "PASS: login/cadastro/painel/entrada/erro; real empty and success states; native and inline validation; password keyboard toggle; safe text; logout; 360/390/768/1440px; no-JS forms. Only verified H2 memory writes.",
+    "PASS: login/cadastro/painel/entrada/saida/retorno/remocao/erro; real empty and success states; native and inline validation; password keyboard toggle; safe text; logout; 360/390/768/1440px; no-JS forms. Only verified H2 memory writes.",
     );
     console.log(`Screenshots: ${output}`);
   } catch (error) {

@@ -9,7 +9,8 @@ A aplicação usa Java e Spring Boot no servidor, com páginas renderizadas pelo
 - **Apresentação do sistema:** landing page com explicação do fluxo, dúvidas frequentes e acesso ao sistema.
 - **Cadastro e login:** criação de conta e autenticação por e-mail e senha.
 - **Registro de entrada:** cadastro de placa, modelo, cor e observação; a data e a hora são registradas pelo servidor.
-- **Painel:** consulta dos veículos registrados, com horário de entrada e observações.
+- **Painel:** consulta dos veículos registrados, com status, horários, permanência e observações.
+- **Saída e retorno:** encerra a permanência sem excluir o cadastro e inicia uma nova visita no retorno. Horários em America/Sao_Paulo; o painel conserva a visita atual ou a última encerrada.
 - **Remoção:** tela de conferência e confirmação antes de excluir um veículo. A remoção é permanente e não registra uma saída.
 - **Interface adaptável:** páginas de operação e apresentação para telas maiores e menores.
 - **Prévia visual:** as telas de Painel, Entrada e Remoção mostradas no laptop e no celular da landing page são exemplos visuais; não alteram os dados da aplicação.
@@ -112,7 +113,7 @@ Este projeto é destinado a desenvolvimento e demonstração escolar. Antes de u
 - A proteção contra CSRF não está configurada globalmente para todos os formulários.
 - O console do H2 está habilitado na configuração local.
 - A remoção apaga o registro e não mantém histórico nem horário de saída.
-- Não há registro de saída, cobrança, pagamento ou controle de vagas.
+- Não há histórico de todas as visitas, cobrança, pagamento ou controle de vagas.
 - A validação do CPF verifica o formato, mas não calcula os dígitos verificadores.
 - Não há licença de distribuição definida neste repositório.
 
@@ -122,7 +123,7 @@ Use apenas dados fictícios durante testes. Não exponha o console do H2 nem uti
 
 Estas ideias ainda não estão implementadas:
 
-- Registrar a saída do veículo sem apagar seu histórico de entrada.
+- Manter um histórico completo de visitas anteriores.
 - Proteger as contas com hash de senha, Spring Security e proteção CSRF.
 - Definir permissões para diferentes tipos de usuário.
 - Adotar migrações versionadas para o esquema do banco.
@@ -133,6 +134,7 @@ Estas ideias ainda não estão implementadas:
 - [Arquitetura e guia para continuar o projeto](docs/ARQUITETURA.md)
 - [Interface, prévias dos dispositivos e movimento](docs/LANDING.md)
 - [Fluxo de remoção de veículos](docs/REMOCAO-VEICULOS.md)
+- [Saída, retorno, permanência e horários](docs/MOVIMENTACAO-VEICULOS.md)
 - [Como validar a aplicação e a interface](docs/VALIDACAO.md)
 - [Recursos visuais e suas origens](docs/ASSETS.md)
 - [Histórico e prompt do vídeo conceitual](docs/HERO-VIDEO.md)

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,38 @@ public class VeiculoEntity {
     private String cor;
     private String observacao;
     private LocalDateTime horaEntrada;
+    private LocalDateTime horaSaida;
+    private Boolean horarioBrasilia;
+    @Transient
+    private String tempoPermanencia;
+
+    public LocalDateTime getHoraSaida() {
+        return horaSaida;
+    }
+
+    public void setHoraSaida(LocalDateTime horaSaida) {
+        this.horaSaida = horaSaida;
+    }
+
+    public boolean isEstacionado() {
+        return horaSaida == null;
+    }
+
+    public boolean isHorarioBrasilia() {
+        return Boolean.TRUE.equals(horarioBrasilia);
+    }
+
+    public void setHorarioBrasilia(Boolean horarioBrasilia) {
+        this.horarioBrasilia = horarioBrasilia;
+    }
+
+    public String getTempoPermanencia() {
+        return tempoPermanencia;
+    }
+
+    public void setTempoPermanencia(String tempoPermanencia) {
+        this.tempoPermanencia = tempoPermanencia;
+    }
 
     public LocalDateTime getHoraEntrada() {
         return horaEntrada;

@@ -5,6 +5,7 @@ import br.gov.sp.etec.estacionamento.model.Veiculo;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 public interface VeiculoService {
     // cadastrar
@@ -16,4 +17,6 @@ public interface VeiculoService {
     boolean excluirVeiculo(Long id);
     Optional<VeiculoEntity> buscarVeiculo(Long id);
     VeiculoEntity atualizarVeiculo(VeiculoEntity veiculoEntity);
+    boolean registrarSaida(Long id, LocalDateTime entradaEsperada);
+    boolean registrarRetorno(Long id, LocalDateTime entradaEsperada);
 }

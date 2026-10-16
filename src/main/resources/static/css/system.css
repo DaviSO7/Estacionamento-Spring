@@ -460,13 +460,14 @@ form[aria-busy="true"] .button {
 }
 .records-table {
   width: 100%;
+  min-width: 1120px;
   border-collapse: collapse;
   table-layout: fixed;
   text-align: left;
 }
 .records-table th,
 .records-table td {
-  padding: 24px;
+  padding: 24px 16px;
   border-bottom: 1px solid #e8eaec;
   overflow-wrap: anywhere;
   font-size: 13px;
@@ -481,19 +482,59 @@ form[aria-busy="true"] .button {
   font-size: 11px;
 }
 .records-table thead th:first-child {
-  width: 17%;
-}
-.records-table thead th:nth-child(2) {
-  width: 18%;
-}
-.records-table thead th:nth-child(3) {
   width: 12%;
 }
+.records-table thead th:nth-child(2) {
+  width: 11%;
+}
+.records-table thead th:nth-child(3) {
+  width: 7%;
+}
 .records-table thead th:nth-child(4) {
-  width: 18%;
+  width: 17%;
+}
+.records-table thead th:nth-child(5) {
+  width: 12%;
+}
+.records-table thead th:nth-child(6) {
+  width: 11%;
+}
+.record-exit,
+.record-duration small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+.parking-status {
+  display: inline-block;
+  border-radius: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
+}
+.parking-status.is-parked {
+  background: #e8f4ec;
+  color: #245b37;
+}
+.parking-status.is-away {
+  background: #edf0f5;
+  color: #414c60;
+}
+.movement-button {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid #304fe8;
+  border-radius: 4px;
+  background: #eef1ff;
+  color: #253bb0;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.movement-button:hover {
+  background: #e0e5ff;
 }
 .records-table thead th:last-child {
-  width: 130px;
+  width: 160px;
 }
 .records-table .record-plate {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
@@ -1025,6 +1066,7 @@ form[aria-busy="true"] .button {
   .records-table tbody {
     display: block;
     width: 100%;
+    min-width: 0;
   }
   .records-table thead {
     position: absolute;
@@ -1083,13 +1125,30 @@ form[aria-busy="true"] .button {
   }
   .record-note {
     grid-column: 1 / -1;
-    grid-row: 4;
+    grid-row: 6;
     color: var(--muted);
+  }
+  .record-status {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+  .record-duration {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+  .record-status .mobile-cell-label,
+  .record-duration .mobile-cell-label {
+    display: inline;
+    margin-right: 8px;
   }
   .records-table .record-actions {
     grid-column: 1 / -1;
-    grid-row: 5;
+    grid-row: 7;
     padding-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
   }
 }
 @media (min-width: 761px) and (max-width: 1100px) {
